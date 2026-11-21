@@ -1,0 +1,6 @@
+pandas>=2.0
+requests>=2.28
+
+# 可选：is_trading_day.py 联网获取交易日历时可用，未安装则回退到本地日历缓存
+# akshare>=1.12
+# exchange-calendars>=4.5
