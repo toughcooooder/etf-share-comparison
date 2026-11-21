@@ -1,0 +1,3 @@
+<view class="chart-wrap" style="height:{{height}}px;" bindtouchstart="onTouch" bindtouchmove="onTouch" bindtouchend="onTouchEnd">
+  <canvas type="2d" id="chart" class="chart-canvas"></canvas>
+</view>

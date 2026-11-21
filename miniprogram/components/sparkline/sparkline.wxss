@@ -1,0 +1,8 @@
+.spark-wrap {
+  width: 100%;
+}
+.spark-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

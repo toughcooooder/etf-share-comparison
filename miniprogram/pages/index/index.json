@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "line-chart": "/components/line-chart/line-chart",
+    "sparkline": "/components/sparkline/sparkline"
+  },
+  "navigationBarTitleText": "ETF份额变化汇总"
+}

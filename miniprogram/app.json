@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/about/about"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#b4232d",
+    "navigationBarTitleText": "ETF份额变化汇总",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f3f5f7",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#67727c",
+    "selectedColor": "#b4232d",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "汇总" },
+      { "pagePath": "pages/about/about", "text": "关于" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,43 @@
+<view class="top-line"></view>
+<view class="page">
+
+  <view class="eyebrow">关于本小程序</view>
+  <view class="h1">ETF基金份额变化汇总</view>
+  <view class="subtitle">把本地每日定时任务（抓取沪深两市 ETF 基金份额）搬到微信里随时看</view>
+
+  <view class="panel">
+    <view class="panel-title" style="padding:22rpx 24rpx 0;">数据来源</view>
+    <view class="about-body">
+      <view class="src-row">
+        <text>上交所 ETF 基金规模接口</text>
+        <text class="src-btn" data-key="sse" bindtap="copy">复制链接</text>
+      </view>
+      <view class="src-row">
+        <text>深交所 ETF 基金规模日频报表</text>
+        <text class="src-btn" data-key="szse" bindtap="copy">复制链接</text>
+      </view>
+      <view class="note">原始口径：沪市 TOT_VOL 单位为万份（÷10000→亿份）；深市单位为份（÷1亿→亿份）。数据为交易日清算后基金份额，不等同于基金净值或规模金额。</view>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="panel-title" style="padding:22rpx 24rpx 0;">接入云开发（6 步）</view>
+    <view class="about-body">
+      <view class="step" wx:for="{{steps}}" wx:key="*this">
+        <text class="step-no">{{index+1}}</text>
+        <text class="step-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="panel-title" style="padding:22rpx 24rpx 0;">当前数据状态</view>
+    <view class="about-body">
+      <view class="note">未配置云环境时，小程序使用内置示例数据（由最近一次报告导出），可正常预览界面与图表。配置云开发后自动切换为最新实时数据。</view>
+    </view>
+  </view>
+
+  <view class="disclaimer">
+    本小程序仅用于个人份额变化跟踪与学习，不构成任何投资建议。基金历史份额变化不代表未来表现。
+  </view>
+</view>

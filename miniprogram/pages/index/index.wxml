@@ -1,0 +1,202 @@
+<view class="top-line"></view>
+<view class="page">
+
+  <view class="header">
+    <view>
+      <view class="eyebrow">沪深两市 · 16只宽基ETF</view>
+      <view class="h1">基金总份额变化汇总</view>
+      <view class="subtitle">统计区间 2015-02-12 至 {{reportEnd}} · 单位统一为亿份</view>
+    </view>
+  </view>
+
+  <view wx:if="{{source}}" class="source-badge {{source==='cloud'?'ok':'warn'}}">
+    {{source==='cloud' ? '云端实时数据' : '内置示例数据（未配置云环境）'}}
+  </view>
+
+  <!-- KPI -->
+  <view class="kpis">
+    <view class="kpi">
+      <view class="kpi-label">纳入基金</view>
+      <view class="kpi-value">{{kpiCount}} 只</view>
+      <view class="kpi-meta">沪市 / 深市宽基ETF</view>
+    </view>
+    <view class="kpi">
+      <view class="kpi-label">最新份额合计</view>
+      <view class="kpi-value">{{kpiTotal}}</view>
+      <view class="kpi-meta">各基金最新有效记录汇总</view>
+    </view>
+    <view class="kpi">
+      <view class="kpi-label">最新一日合计变化</view>
+      <view class="kpi-value {{kpiDailyCls}}">{{kpiDaily}}</view>
+      <view class="kpi-meta">相对各自前一有效交易日</view>
+    </view>
+    <view class="kpi">
+      <view class="kpi-label">最新份额最大</view>
+      <view class="kpi-value">{{kpiLargest}}</view>
+      <view class="kpi-meta">{{kpiLargestMeta}}</view>
+    </view>
+  </view>
+
+  <!-- 多基金对比 -->
+  <view class="panel">
+    <view class="panel-head">
+      <view>
+        <view class="panel-title">多基金对比</view>
+        <view class="panel-note">勾选基金比较绝对份额，或切换为各自起点=100的相对变化</view>
+      </view>
+      <view class="control-row">
+        <view class="segmented">
+          <view class="segment {{compMode==='absolute'?'active':''}}" data-mode="absolute" bindtap="setCompMode">份额</view>
+          <view class="segment {{compMode==='indexed'?'active':''}}" data-mode="indexed" bindtap="setCompMode">相对起点</view>
+        </view>
+        <view class="segmented">
+          <view class="segment {{compRange==='1y'?'active':''}}" data-range="1y" bindtap="setCompRange">1年</view>
+          <view class="segment {{compRange==='3y'?'active':''}}" data-range="3y" bindtap="setCompRange">3年</view>
+          <view class="segment {{compRange==='5y'?'active':''}}" data-range="5y" bindtap="setCompRange">5年</view>
+          <view class="segment {{compRange==='all'?'active':''}}" data-range="all" bindtap="setCompRange">全部</view>
+        </view>
+      </view>
+    </view>
+    <view class="selector-head">
+      <text class="selector-label">{{selected.length}} 只已选</text>
+      <text><text class="plain-btn" bindtap="selectAll">全选</text><text class="plain-btn" bindtap="clearAll">清空</text></text>
+    </view>
+    <scroll-view scroll-x class="chips">
+      <view
+        wx:for="{{selectable}}"
+        wx:key="code"
+        class="chip {{item.checked?'chip-on':''}}"
+        style="border-color:{{item.checked?item.color:'#d8dee3'}};"
+        data-code="{{item.code}}"
+        bindtap="toggleFund"
+      >
+        <text class="swatch" style="background:{{item.color}};"></text>
+        <text class="chip-text"><text class="chip-code">{{item.code}}</text>{{item.name}}</text>
+      </view>
+    </scroll-view>
+    <view class="chart-area">
+      <line-chart series="{{compSeries}}" height="420" compact="{{false}}"></line-chart>
+      <view wx:if="{{!compSeries.length}}" class="empty-hint">请至少选择一只基金</view>
+    </view>
+  </view>
+
+  <!-- 同指数汇总 -->
+  <view class="panel">
+    <view class="panel-head">
+      <view>
+        <view class="panel-title">同指数ETF汇总</view>
+        <view class="panel-note">粗线为同指数全部ETF份额之和，细线为各产品</view>
+      </view>
+    </view>
+    <scroll-view scroll-x class="index-tabs">
+      <view
+        wx:for="{{indexGroups}}"
+        wx:key="*this"
+        class="index-tab {{indexGroup===item?'active':''}}"
+        data-group="{{item}}"
+        bindtap="setIndexGroup"
+      >{{item}}</view>
+    </scroll-view>
+    <view class="index-kpis" wx:if="{{indexKpis.latest}}">
+      <view class="index-stat"><text class="index-stat-label">合计最新份额</text><text class="index-stat-value">{{indexKpis.latest}}</text><text class="index-stat-sub">{{indexKpis.latestDate}}</text></view>
+      <view class="index-stat"><text class="index-stat-label">最新日合计变化</text><text class="index-stat-value {{indexKpis.dailyCls}}">{{indexKpis.daily}}</text></view>
+      <view class="index-stat"><text class="index-stat-label">纳入ETF</text><text class="index-stat-value">{{indexKpis.count}}只</text></view>
+      <view class="index-stat"><text class="index-stat-label">最大单只</text><text class="index-stat-value sm">{{indexKpis.largest}}</text></view>
+    </view>
+    <view class="chart-area">
+      <line-chart series="{{indexSeries}}" height="340" compact="{{false}}"></line-chart>
+    </view>
+  </view>
+
+  <!-- 单基金概览 -->
+  <view class="filter-band">
+    <view class="section-title">单基金概览</view>
+    <view class="group-filter">
+      <view
+        wx:for="{{groups}}"
+        wx:key="*this"
+        class="filter-btn {{group===item?'active':''}}"
+        data-group="{{item}}"
+        bindtap="setGroup"
+      >{{item}}</view>
+    </view>
+  </view>
+  <view class="fund-cards">
+    <view
+      wx:for="{{cards}}"
+      wx:key="code"
+      class="fund-card"
+      data-code="{{item.code}}"
+      bindtap="goDetail"
+    >
+      <view class="fund-card-head">
+        <view class="fund-id">
+          <text class="fund-code" style="color:{{item.color}};">{{item.code}}</text>
+          <text class="fund-name">{{item.name}}</text>
+        </view>
+        <text class="exchange-badge">{{item.exchange}} · {{item.group}}</text>
+      </view>
+      <view class="spark-wrap">
+        <sparkline values="{{item.spark}}" color="{{item.sparkColor}}" height="60"></sparkline>
+      </view>
+      <view class="fund-card-stats">
+        <view class="fund-card-stat">
+          <text class="mini-label">最新份额</text>
+          <text class="mini-value">{{item.latest}}</text>
+        </view>
+        <view class="fund-card-stat">
+          <text class="mini-label">最新日变化</text>
+          <text class="mini-value {{item.dailyCls}}">{{item.daily}}</text>
+        </view>
+      </view>
+      <view class="coverage">{{item.latestDate}} · {{item.dailyPct}} · 共{{item.count}}日</view>
+    </view>
+  </view>
+
+  <!-- 汇总表 -->
+  <view class="panel">
+    <view class="panel-head">
+      <view>
+        <view class="panel-title">基金份额汇总表</view>
+        <view class="panel-note">最新日变化按相邻有效交易日计；累计变化率从首个可用记录计</view>
+      </view>
+      <picker mode="selector" range="{{['最新份额','最新日变化','累计变化率','基金代码']}}" value="{{sort==='latest'?0:sort==='daily'?1:sort==='change'?2:3}}" bindchange="onSortChange">
+        <view class="sort-picker">排序 ▾</view>
+      </picker>
+    </view>
+    <view class="table-wrap">
+      <view class="tr tr-head">
+        <text class="td td-l">代码</text>
+        <text class="td td-l">名称</text>
+        <text class="td">市场</text>
+        <text class="td">类别</text>
+        <text class="td">最新日</text>
+        <text class="td">最新份额</text>
+        <text class="td">日变化</text>
+        <text class="td">日变化率</text>
+        <text class="td">累计变化率</text>
+        <text class="td">峰值</text>
+      </view>
+      <view class="tr" wx:for="{{tableRows}}" wx:key="code" data-code="{{item.code}}" bindtap="goDetail">
+        <text class="td td-l table-code" style="color:{{item.color}};">{{item.code}}</text>
+        <text class="td td-l">{{item.name}}</text>
+        <text class="td">{{item.exchange}}</text>
+        <text class="td">{{item.group}}</text>
+        <text class="td">{{item.lastDate}}</text>
+        <text class="td">{{item.last}}</text>
+        <text class="td {{item.dailyCls}}">{{item.daily}}</text>
+        <text class="td {{item.dailyCls}}">{{item.dailyPct}}</text>
+        <text class="td {{item.changeCls}}">{{item.changePct}}</text>
+        <text class="td">{{item.peak}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="source-note">沪市口径：上交所基金规模接口，原始 TOT_VOL 单位为万份，页面除以 10,000 换算为亿份。</view>
+  <view class="source-note szse">深市口径：深交所基金规模日频公开报表，原始单位为份，页面除以 1 亿换算为亿份。</view>
+
+  <view class="footer">
+    <text>数据为交易日清算后基金份额，不等同于基金净值或规模金额。</text>
+    <text wx:if="{{generatedAt}}">生成：{{generatedAt}}</text>
+  </view>
+</view>

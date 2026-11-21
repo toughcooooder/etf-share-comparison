@@ -1,0 +1,47 @@
+<view class="top-line"></view>
+<view class="page">
+
+  <view wx:if="{{notFound}}" class="notfound">未找到该基金数据</view>
+
+  <block wx:else>
+    <view class="detail-head">
+      <view>
+        <view class="eyebrow">{{exchange}} · {{group}}</view>
+        <view class="h1">{{code}} {{name}}</view>
+      </view>
+    </view>
+
+    <view class="panel">
+      <view class="panel-head">
+        <view>
+          <view class="panel-title">份额走势</view>
+          <view class="panel-note">单位：亿份</view>
+        </view>
+        <view class="control-row">
+          <view class="segmented">
+            <view class="segment {{mode==='absolute'?'active':''}}" data-mode="absolute" bindtap="setMode">份额</view>
+            <view class="segment {{mode==='indexed'?'active':''}}" data-mode="indexed" bindtap="setMode">相对起点</view>
+          </view>
+          <view class="segmented">
+            <view class="segment {{range==='1y'?'active':''}}" data-range="1y" bindtap="setRange">1年</view>
+            <view class="segment {{range==='3y'?'active':''}}" data-range="3y" bindtap="setRange">3年</view>
+            <view class="segment {{range==='5y'?'active':''}}" data-range="5y" bindtap="setRange">5年</view>
+            <view class="segment {{range==='all'?'active':''}}" data-range="all" bindtap="setRange">全部</view>
+          </view>
+        </view>
+      </view>
+      <view class="chart-area">
+        <line-chart series="{{series}}" height="420" compact="{{false}}"></line-chart>
+      </view>
+    </view>
+
+    <view class="stat-grid">
+      <view class="stat"><text class="stat-label">最新份额</text><text class="stat-value">{{latest}}</text><text class="stat-sub">{{latestDate}}</text></view>
+      <view class="stat"><text class="stat-label">最新日变化</text><text class="stat-value {{dailyCls}}">{{daily}}</text><text class="stat-sub">{{dailyPct}}</text></view>
+      <view class="stat"><text class="stat-label">累计变化率</text><text class="stat-value {{changeCls}}">{{changePct}}</text><text class="stat-sub">自 {{firstDate}}</text></view>
+      <view class="stat"><text class="stat-label">区间峰值</text><text class="stat-value">{{peak}}</text><text class="stat-sub">{{peakDate}}</text></view>
+      <view class="stat"><text class="stat-label">起始份额</text><text class="stat-value">{{first}}</text><text class="stat-sub">{{firstDate}}</text></view>
+      <view class="stat"><text class="stat-label">有效记录</text><text class="stat-value">{{count}}</text><text class="stat-sub">交易日</text></view>
+    </view>
+  </block>
+</view>

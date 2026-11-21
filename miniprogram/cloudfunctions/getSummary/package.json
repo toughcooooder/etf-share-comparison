@@ -1,0 +1,9 @@
+{
+  "name": "getSummary",
+  "version": "1.0.0",
+  "description": "读取云存储中的 ETF 份额汇总 JSON 返回给小程序",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
