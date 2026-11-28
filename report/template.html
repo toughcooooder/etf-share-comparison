@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ETF Scope · ETF 份额监测</title>
+  <style>__REPORT_CSS__</style>
+</head>
+<body>
+  <a class="skip" href="#workspace">跳到主要内容</a>
+  <header class="topbar">
+    <div class="top-inner">
+      <a href="#overview" class="brand" aria-label="ETF Scope 市场总览">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>ETF<span class="brand-light">Scope</span></span>
+      </a>
+      <nav class="navigation" aria-label="主要导航">
+        <a href="#overview" data-page="overview"><i data-icon="grid"></i>市场总览</a>
+        <a href="#indices" data-page="indices"><i data-icon="layers"></i>指数分析</a>
+        <a href="#funds" data-page="funds"><i data-icon="list"></i>基金明细</a>
+      </nav>
+      <div class="top-end"><span class="snapshot"><b></b>盘后快照</span><span class="top-rule"></span><button class="icon-btn" id="showSources" title="数据来源与统计口径" aria-label="数据来源与统计口径"><i data-icon="database"></i></button></div>
+    </div>
+  </header>
+  <main id="workspace" tabindex="-1">
+    <header class="page-heading">
+      <div><h1 id="pageTitle">ETF 份额监测</h1><p id="pageSubtitle">沪深宽基 ETF 的份额走势与申赎动向</p></div>
+      <div class="page-actions"><span class="date-stamp"><i data-icon="calendar"></i><span>数据截至</span><time datetime="__REPORT_END__">__REPORT_END__</time></span><button class="primary" id="downloadCsv"><i data-icon="download"></i>导出 CSV</button></div>
+    </header>
+
+    <div id="overviewBody">
+      <section class="metrics" aria-label="市场汇总指标">
+        <article class="metric featured">
+          <header><span class="metric-icon"><i data-icon="stack"></i></span><h2>基金总份额</h2></header>
+          <div class="metric-number"><strong id="latestTotal"></strong><small>亿份</small></div>
+          <div class="metric-foot" id="totalMeta"></div><div id="totalSpark" class="micro-spark" aria-hidden="true"></div>
+        </article>
+        <article class="metric">
+          <header><span class="metric-icon coral"><i data-icon="pulse"></i></span><h2>单日份额变化</h2></header>
+          <div class="metric-number"><strong id="latestDailyChange"></strong><small>亿份</small></div>
+          <div class="metric-foot" id="dailyMeta"></div><div id="dailySpark" class="micro-spark" aria-hidden="true"></div>
+        </article>
+        <article class="metric">
+          <header><span class="metric-icon aqua"><i data-icon="grid"></i></span><h2>跟踪基金</h2></header>
+          <div class="metric-number"><strong id="fundCount"></strong><small>只</small></div>
+          <div class="metric-foot" id="exchangeCounts"></div><div id="exchangeBars" class="exchange-bars" aria-hidden="true"></div>
+        </article>
+        <article class="metric">
+          <header><span class="metric-icon violet"><i data-icon="trophy"></i></span><h2>最大单只份额</h2></header>
+          <div class="metric-number"><strong id="largestValue"></strong><small>亿份</small></div>
+          <div class="metric-foot" id="largestFundMeta"></div><div id="largestSpark" class="micro-spark" aria-hidden="true"></div>
+        </article>
+      </section>
+
+      <div class="analysis-grid">
+        <section class="panel trend-panel">
+          <header class="panel-head"><div><h2>基金份额走势</h2><p id="trendSub"></p></div>
+            <div class="segmented periods" id="periods" role="group" aria-label="走势图时间范围">
+              <button data-range="1y" aria-pressed="true">1 年</button><button data-range="3y">3 年</button><button data-range="5y">5 年</button><button data-range="all">全部</button>
+            </div>
+          </header>
+          <div class="chart-toolbar"><div class="legend" id="comparisonLegend"></div><button class="pick" id="pickFunds"><i data-icon="sliders"></i>配置对比</button></div>
+          <div class="chart-frame" id="comparisonFrame"><canvas id="comparisonChart" role="img" aria-label="所选基金的历史份额走势图"></canvas><div class="chart-empty" hidden>在「配置对比」中选择基金以查看走势</div></div>
+        </section>
+        <section class="panel ranking">
+          <header class="panel-head"><div><h2>份额异动榜</h2><p>按各基金最新单日变化排序</p></div><span class="rank-symbol"><i data-icon="bars"></i></span></header>
+          <div class="rank-tabs" role="group" aria-label="异动排行方向"><button aria-pressed="true" data-rank="up"><i data-icon="upRight"></i>净申购</button><button data-rank="down"><i data-icon="downRight"></i>净赎回</button><span>亿份</span></div>
+          <ol id="rankRows"></ol>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel list-panel" id="fundPanel">
+      <header class="panel-head"><div class="inline-title"><h2>基金监测列表</h2><span class="count" id="listCount"></span></div>
+        <div class="list-tools"><label class="search"><i data-icon="search"></i><input id="fundSearch" type="search" aria-label="搜索基金名称或代码" placeholder="搜索名称或代码"></label>
+          <div class="select-wrap"><select id="groupFilter" aria-label="按指数筛选"></select><i data-icon="chevronDown"></i></div>
+          <div class="select-wrap"><select id="sortSelect" aria-label="基金排序"><option value="latest">份额降序</option><option value="daily">日变化降序</option><option value="change">累计变化率降序</option><option value="code">代码升序</option></select><i data-icon="chevronDown"></i></div>
+        </div>
+      </header>
+      <div class="table-scroll" role="region" aria-label="基金数据表，可横向滚动" tabindex="0">
+        <table><thead><tr><th>基金名称 / 代码</th><th>跟踪指数</th><th>最新份额<span>（亿份）</span></th><th>单日变化<span>（亿份）</span></th><th>日变化率</th><th>近 60 日走势</th><th>数据日期</th></tr></thead><tbody id="summaryTable"></tbody></table>
+      </div><div id="listEmpty" hidden class="list-empty">没有匹配的基金<button class="pick" id="clearSearch">重置筛选</button></div>
+    </section>
+
+    <section class="panel index-panel" id="indexPanel" hidden>
+      <header class="panel-head"><div><h2>同指数 ETF 汇总</h2><p>按共同截止日汇总，基金自首个有效记录起纳入。</p></div></header>
+      <div id="indexTabs" class="index-tabs" role="group" aria-label="跟踪指数"></div>
+      <div id="indexStats" class="index-stats"></div>
+      <div class="legend" id="indexLegend"></div>
+      <div class="chart-frame" id="indexFrame"><canvas id="indexChart" role="img" aria-label="指数合计与各成分基金份额走势"></canvas></div>
+    </section>
+    <footer class="footer"><span>数据来源 <button class="text-button" id="footerSources">上海证券交易所 · 深圳证券交易所</button></span><span>生成时间 __GENERATED_AT__</span></footer>
+  </main>
+
+  <dialog id="configDialog" aria-labelledby="configTitle">
+    <div class="dialog-head"><div><h2 id="configTitle">配置基金对比</h2><p>选择要绘制的基金和数值口径</p></div><button class="icon-btn close" aria-label="关闭"><i data-icon="x"></i></button></div>
+    <div class="config-mode"><strong>比较口径</strong><div class="segmented" role="group" aria-label="比较口径"><button data-mode="absolute">绝对份额</button><button data-mode="indexed">起点 = 100</button></div></div>
+    <div class="selector-head"><span id="selectedCount"></span><div><button id="selectAll">全选</button><button id="clearAll">清空</button></div></div>
+    <div class="selector" id="fundSelector"></div><div class="dialog-actions"><button class="primary close">完成</button></div>
+  </dialog>
+  <dialog id="detailDialog" aria-labelledby="detailTitle">
+    <div class="dialog-head"><div><span class="detail-id" id="detailId"></span><h2 id="detailTitle"></h2></div><button class="icon-btn close" aria-label="关闭"><i data-icon="x"></i></button></div>
+    <div class="detail-stats" id="detailStats"></div><h3>历史份额走势 <small>亿份</small></h3>
+    <div class="chart-frame" id="detailFrame"><canvas id="detailChart" role="img" aria-label="单基金全部历史份额"></canvas></div>
+    <p id="detailDates" class="detail-dates"></p>
+  </dialog>
+  <dialog id="sourceDialog" aria-labelledby="sourceTitle">
+    <div class="dialog-head"><h2 id="sourceTitle">数据来源与统计口径</h2><button class="icon-btn close" aria-label="关闭"><i data-icon="x"></i></button></div>
+    <div class="source-content">
+      <h3>上海证券交易所</h3><p>基金规模接口以万份披露，除以 10,000 后以亿份展示。<a href="https://www.sse.com.cn/assortment/fund/etf/list/scale/" target="_blank" rel="noreferrer">查看上交所来源 ↗</a></p>
+      <h3>深圳证券交易所</h3><p>基金规模日频报表以份披露，除以 1 亿后展示。<a href="https://www.szse.cn/market/fund/volume/etf/index.html" target="_blank" rel="noreferrer">查看深交所来源 ↗</a></p>
+      <h3>日期与变化量</h3><p>总份额取各基金最新有效记录。单日变化为各自最近两笔有效记录之差，两市数据日期可能不同。指数图按当日已有记录汇总。份额增加用红色，减少用绿色，数值单位为基金份额。</p>
+    </div>
+  </dialog>
+  <script>
+    "use strict";
+    const FUNDS = __FUNDS_JSON__;
+    const REPORT_END = "__REPORT_END__";
+    __REPORT_JS__
+  </script>
+</body>
+</html>
